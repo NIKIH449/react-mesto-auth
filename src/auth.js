@@ -27,19 +27,12 @@ export const signIn = (password, email) => {
   }).then(checkResponse);
 };
 
-export const checkValidity = (jwt) => {
+export const checkValidity = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwt}`,
+      Authorization: `Bearer ${token}`,
     },
-  })
-    .then((res) => {
-      return res.json();
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  }).then(checkResponse);
 };

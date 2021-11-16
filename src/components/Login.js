@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useHistory } from 'react';
 import * as auth from '../auth';
-function Login() {
+
+function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword]  = useState('');
 
   function onLogin(e) {
     e.preventDefault();
-    auth.signIn(password, email)
+    props.onLogin(password, email)
   }
 
   function handleChangeEmail(e) {
@@ -18,7 +19,7 @@ function Login() {
   }
   return (
     <section className="auth">
-      <form className="auth__form">
+      <form onSubmit={onLogin} className="auth__form">
         <div className="auth__container">
           <h2 className="auth__title">Войти</h2>
           <input
@@ -43,7 +44,7 @@ function Login() {
             maxLength="40"
           />
         </div>
-        <button onClick={onLogin} className="auth__submit-button">
+        <button type="sumbit" className="auth__submit-button">
           Войти
         </button>
       </form>

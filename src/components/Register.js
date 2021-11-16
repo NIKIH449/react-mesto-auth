@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import * as auth from '../auth';
 
-function Register() {
+function Register(props) {
   const [email, setEmail] = useState('');
-  const [password, setPassword]  = useState('');
+  const [password, setPassword] = useState('');
 
   function onRegister(e) {
     e.preventDefault();
-    auth.signUp(password, email)
+    props.register(password, email);
   }
 
   function handleChangeEmail(e) {
@@ -20,7 +19,7 @@ function Register() {
   }
   return (
     <section className="auth">
-      <form className="auth__form">
+      <form className="auth__form" onSubmit={onRegister}>
         <div className="auth__container">
           <h2 className="auth__title">Регистрация</h2>
           <input
@@ -43,10 +42,11 @@ function Register() {
             placeholder="Пароль"
             minLength="6"
             maxLength="40"
+            required
           />
         </div>
         <div className="auth__container">
-          <button onClick={onRegister} className="auth__submit-button">
+          <button type="submit" className="auth__submit-button">
             Зарегистрироваться
           </button>
           <p className="auth__paragraph">
@@ -61,4 +61,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Register

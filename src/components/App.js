@@ -11,9 +11,12 @@ import Register from './Register';
 import InfoTooltip from './InfoTooltip';
 import ProtectedRoute from './ProtectedRoute';
 import '../index.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
+import * as auth from '../auth';
+import registered from '../images/registered.svg';
+import notRegistered from '../images/notRegistered.svg';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -24,6 +27,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [card, setCard] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [image, setImage] = useState('');
+  const [title, setTitle] = useState('');
+  const [token, setToken] = useState('');
+  const navigate = useNavigate();
+  console.log(token);
 
   useEffect(() => {
     api
@@ -114,6 +122,47 @@ function App() {
       });
   }
 
+  function register(password, name) {
+    auth
+      .signUp(password, name)
+      .then(() => {
+        setImage(registered);
+        setTitle('Вы успешно зарегистирировались!');
+        navigate('/sign-in');
+      })
+      .catch(() => {
+        setImage(notRegistered);
+        setTitle('Что-то пошло не так! Попробуйте ещё раз.');
+      })
+      .finally(handleSingIn());
+  }
+
+  function handleLogIn(password, name) {
+    auth
+      .signIn(password, name)
+      .then((res) => {
+        setToken(res.token);
+        setLoggedIn(true);
+        navigate('/');
+        localStorage.setItem('token', res.token);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth.checkValidity(token).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          navigate('/');
+        }
+      });
+    }
+  },[]);
+
   function handleSingIn() {
     setIsInfoTooltipOpen(true);
   }
@@ -136,6 +185,10 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
+
+  function handleClick() {
+    Navigate('/home');
+  }
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -143,9 +196,9 @@ function App() {
         <Routes>
           <Route
             path="/sign-up"
-            element={<Register onRegister={handleSingIn} />}
+            element={<Register register={register} onRegister={handleSingIn} />}
           />
-          <Route path="/sign-in" element={<Login />} />
+          <Route path="/sign-in" element={<Login onLogin={handleLogIn} />} />
           <Route
             path="/"
             element={
@@ -180,7 +233,12 @@ function App() {
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
-        <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} />
+        <InfoTooltip
+          image={image}
+          title={title}
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
