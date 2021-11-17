@@ -7,12 +7,16 @@ function Header(props) {
   return (
     <header className="header">
       <a href="https://nikih449.github.io/mesto/">
-        <img className="header__logo" src={logo} alt="логотип Mesto" />
+        <img className="header__logo" src={logo} alt="результат регистрации" />
       </a>
       {props.loggedIn ? (
         <div className="header__container">
-          <p className="header__login">123@mail.com</p>
-          <button type="submit" className="header__button">
+          <p className="header__login">{props.email}</p>
+          <button
+            onClick={props.onSignOut}
+            type="submit"
+            className="header__button"
+          >
             Выйти
           </button>
         </div>

@@ -1,13 +1,24 @@
 import React from 'react';
+import { useEffect } from 'react/cjs/react.development';
 
 function PopupWithForm(props) {
+  useEffect(() => {
+    function onEscClose(e) {
+      if (e.key === 'Escape') {
+        props.onClose();
+      }
+    }
+    window.addEventListener('keydown', onEscClose);
+    return () => window.removeEventListener('keydown', onEscClose);
+  }, [props]);
   return (
     <div
       className={`popup ${props.isOpen ? 'popup_opened' : ''} popup_type_${
         props.name
       }`}
+      onClick={props.onClose}
     >
-      <div className="popup__container">
+      <div className="popup__container" onClick={(e) => e.stopPropagation()}>
         <form
           className="popup__form"
           name={props.name}

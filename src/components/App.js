@@ -11,7 +11,7 @@ import Register from './Register';
 import InfoTooltip from './InfoTooltip';
 import ProtectedRoute from './ProtectedRoute';
 import '../index.css';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { api } from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import * as auth from '../auth';
@@ -30,13 +30,28 @@ function App() {
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [token, setToken] = useState('');
+  const [email, setEmail] = useState('');
   const navigate = useNavigate();
-  console.log(token);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth.checkValidity(token).then((res) => {
+        if (res) {
+          setEmail(res.data.email);
+          setLoggedIn(true);
+          navigate('/');
+        }
+      });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     api
       .getUserInfo()
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        setCurrentUser(data);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -121,10 +136,9 @@ function App() {
         console.log(err);
       });
   }
-
-  function register(password, name) {
+  function onRegister(password, email) {
     auth
-      .signUp(password, name)
+      .signUp(password, email)
       .then(() => {
         setImage(registered);
         setTitle('Вы успешно зарегистирировались!');
@@ -137,35 +151,32 @@ function App() {
       .finally(handleSingIn());
   }
 
-  function handleLogIn(password, name) {
+  function onLogin(password, email) {
     auth
-      .signIn(password, name)
+      .signIn(password, email)
       .then((res) => {
         setToken(res.token);
         setLoggedIn(true);
         navigate('/');
         localStorage.setItem('token', res.token);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        setImage(notRegistered);
+        setTitle('Что-то пошло не так! Возможно, логин или пароль неверны.');
+        handleSingIn();
       });
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      auth.checkValidity(token).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          navigate('/');
-        }
-      });
-    }
-  },[]);
+  function onSignOut() {
+    localStorage.removeItem('token');
+    navigate('/');
+    setLoggedIn(false);
+  }
 
   function handleSingIn() {
     setIsInfoTooltipOpen(true);
   }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -186,19 +197,16 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  function handleClick() {
-    Navigate('/home');
-  }
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
         <Routes>
           <Route
             path="/sign-up"
-            element={<Register register={register} onRegister={handleSingIn} />}
+            element={<Register onRegister={onRegister} />}
           />
-          <Route path="/sign-in" element={<Login onLogin={handleLogIn} />} />
+          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
           <Route
             path="/"
             element={
@@ -236,7 +244,7 @@ function App() {
         <InfoTooltip
           image={image}
           title={title}
-          isOpen={isInfoTooltipOpen}
+          isOpen={registered && title && isInfoTooltipOpen}
           onClose={closeAllPopups}
         />
       </div>

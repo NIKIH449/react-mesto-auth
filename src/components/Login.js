@@ -1,13 +1,11 @@
-import React, { useRef, useState, useHistory } from 'react';
-import * as auth from '../auth';
-
+import React, { useState } from 'react';
 function Login(props) {
   const [email, setEmail] = useState('');
-  const [password, setPassword]  = useState('');
+  const [password, setPassword] = useState('');
 
   function onLogin(e) {
     e.preventDefault();
-    props.onLogin(password, email)
+    props.onLogin(password, email);
   }
 
   function handleChangeEmail(e) {

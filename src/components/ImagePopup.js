@@ -3,11 +3,12 @@ import React from 'react';
 function ImagePopup(props) {
   return (
     <div
+      onClick={props.onClose}
       className={`popup ${
         props.card ? 'popup_opened' : ''
       }  popup_type_picture`}
     >
-      <div className="popup__picture">
+      <div className="popup__picture" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={props.onClose}
           type="button"

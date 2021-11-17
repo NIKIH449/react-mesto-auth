@@ -9,3 +9,8 @@
   color: #000000;
   border: none;
 }
+
+.auth__submit-button:hover {
+  background: #ffffff;
+  opacity: 0.85;
+}
