@@ -32,7 +32,6 @@ function App() {
   const [email, setEmail] = useState('');
   const [isDataLoading, setIsDataLoading] = useState(true);
   const navigate = useNavigate();
-  const isLoading = loggedIn && !isDataLoading;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -198,11 +197,11 @@ function App() {
       <div className="page">
         <Header
           email={email}
-          isLoading={!isLoading}
+          isLoading={isDataLoading}
           loggedIn={loggedIn}
           onSignOut={onSignOut}
         />
-        {!isLoading ? (
+        {isDataLoading ? (
           <Preloader />
         ) : (
           <>
