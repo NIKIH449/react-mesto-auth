@@ -11,6 +11,7 @@ function EditAvatarPopup(props) {
     });
     avatarRef.current.value = '';
   }
+
   return (
     <PopupWithForm
       onSubmit={handleSubmit}

@@ -9,7 +9,7 @@ function Header(props) {
       <a href="https://nikih449.github.io/mesto/">
         <img className="header__logo" src={logo} alt="результат регистрации" />
       </a>
-      {props.loggedIn ? (
+      {!props.isLoading ? props.loggedIn ? (
         <div className="header__container">
           <p className="header__login">{props.email}</p>
           <button
@@ -28,7 +28,7 @@ function Header(props) {
         <Link to="/sign-up" className="header__link">
           Регистрация
         </Link>
-      )}
+      ) : ''}
     </header>
   );
 }

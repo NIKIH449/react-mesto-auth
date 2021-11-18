@@ -17,7 +17,7 @@ import { CurrentUserContext } from '../context/CurrentUserContext';
 import * as auth from '../utils/auth';
 import registered from '../images/registered.svg';
 import notRegistered from '../images/notRegistered.svg';
-
+import Preloader from './Preloader';
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -30,6 +30,7 @@ function App() {
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,21 +52,13 @@ function App() {
   }, [navigate]);
 
   useEffect(() => {
-    api
-      .getUserInfo()
+    const profileInfo = api.getUserInfo();
+    const initialCards = api.getInitialCards();
+    Promise.all([profileInfo, initialCards])
       .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCard(data);
+        setCurrentUser(data[0]);
+        setCard(data[1]);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -203,53 +196,64 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header email={email} loggedIn={loggedIn} onSignOut={onSignOut} />
-        <Routes>
-          <Route
-            path="/sign-up"
-            element={<Register onRegister={onRegister} />}
-          />
-          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute loggedIn={loggedIn}>
-                <Main
-                  card={card}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                  onCardClick={handleCardClick}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onEditAvatar={handleEditAvatarClick}
-                />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        <Footer />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
+        <Header
+          email={email}
+          isLoading={isLoading}
+          loggedIn={loggedIn}
+          onSignOut={onSignOut}
         />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleNewPlace}
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-        <InfoTooltip
-          image={image}
-          title={title}
-          isOpen={registered && title && isInfoTooltipOpen}
-          onClose={closeAllPopups}
-        />
+        {isLoading ? (
+          <Preloader />
+        ) : (
+          <>
+            <Routes>
+              <Route
+                path="/sign-up"
+                element={<Register onRegister={onRegister} />}
+              />
+              <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute loggedIn={loggedIn}>
+                    <Main
+                      card={card}
+                      onCardLike={handleCardLike}
+                      onCardDelete={handleCardDelete}
+                      onCardClick={handleCardClick}
+                      onEditProfile={handleEditProfileClick}
+                      onAddPlace={handleAddPlaceClick}
+                      onEditAvatar={handleEditAvatarClick}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+            <Footer />
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
+            />
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onAddPlace={handleNewPlace}
+            />
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+            />
+            <InfoTooltip
+              image={image}
+              title={title}
+              isOpen={registered && title && isInfoTooltipOpen}
+              onClose={closeAllPopups}
+            />
+          </>
+        )}
       </div>
     </CurrentUserContext.Provider>
   );
