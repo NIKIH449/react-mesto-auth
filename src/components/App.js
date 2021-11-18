@@ -30,8 +30,9 @@ function App() {
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(true);
   const navigate = useNavigate();
+  const isLoading = loggedIn && !isDataLoading;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -58,7 +59,7 @@ function App() {
       .then((data) => {
         setCurrentUser(data[0]);
         setCard(data[1]);
-        setIsLoading(false);
+        setIsDataLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -192,17 +193,16 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header
           email={email}
-          isLoading={isLoading}
+          isLoading={!isLoading}
           loggedIn={loggedIn}
           onSignOut={onSignOut}
         />
-        {isLoading ? (
+        {!isLoading ? (
           <Preloader />
         ) : (
           <>
