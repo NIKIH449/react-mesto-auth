@@ -14,7 +14,7 @@ import '../index.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { api } from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
-import * as auth from '../auth';
+import * as auth from '../utils/auth';
 import registered from '../images/registered.svg';
 import notRegistered from '../images/notRegistered.svg';
 
@@ -29,20 +29,24 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
-  const [token, setToken] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      auth.checkValidity(token).then((res) => {
-        if (res) {
-          setEmail(res.data.email);
-          setLoggedIn(true);
-          navigate('/');
-        }
-      });
+      auth
+        .checkValidity(token)
+        .then((res) => {
+          if (res) {
+            setEmail(res.data.email);
+            setLoggedIn(true);
+            navigate('/');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [navigate]);
 
@@ -155,7 +159,6 @@ function App() {
     auth
       .signIn(password, email)
       .then((res) => {
-        setToken(res.token);
         setLoggedIn(true);
         navigate('/');
         localStorage.setItem('token', res.token);
