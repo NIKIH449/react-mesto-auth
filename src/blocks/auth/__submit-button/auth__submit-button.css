@@ -8,6 +8,7 @@
   text-align: center;
   color: #000000;
   border: none;
+  cursor: pointer;
 }
 
 .auth__submit-button:hover {

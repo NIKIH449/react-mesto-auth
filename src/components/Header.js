@@ -6,7 +6,7 @@ function Header(props) {
   const location = useLocation();
   return (
     <header className="header">
-      <a href="https://nikih449.github.io/mesto/">
+      <a href="https://nikitas.nomoredomains.work/">
         <img className="header__logo" src={logo} alt="результат регистрации" />
       </a>
       {!props.isLoading ? props.loggedIn ? (

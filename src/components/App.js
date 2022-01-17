@@ -50,7 +50,6 @@ function App() {
         });
     }
   }, [navigate]);
-
   useEffect(() => {
     const profileInfo = api.getUserInfo();
     const initialCards = api.getInitialCards();
