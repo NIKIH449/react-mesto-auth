@@ -13,7 +13,7 @@ function Main(props) {
             <img
               className="profile__avatar"
               src={currentUser.avatar}
-              alt="аватар пользователя"
+              alt="avatar"
             />
             <button
               onClick={props.onEditAvatar}

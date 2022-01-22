@@ -29,8 +29,8 @@ function AddPlacePopup(props) {
       onClose={props.onClose}
       isOpen={props.isOpen}
       name="add-picture"
-      title="Новое место"
-      buttonText="Создать"
+      title="New place"
+      buttonText="Create"
     >
       <div className="popup__input-container">
         <input
@@ -38,7 +38,7 @@ function AddPlacePopup(props) {
           type="text"
           name="name"
           className="popup__input popup__input_type_place"
-          placeholder="Название"
+          placeholder="Name"
           required
           minLength="2"
           maxLength="30"
@@ -53,7 +53,7 @@ function AddPlacePopup(props) {
           type="url"
           name="link"
           className="popup__input popup__input_type_picture"
-          placeholder="Ссылка на картинку"
+          placeholder="Link to picture"
           required
           value={link}
           onChange={handlePlaceLink}

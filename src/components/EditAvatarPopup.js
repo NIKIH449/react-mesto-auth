@@ -18,8 +18,8 @@ function EditAvatarPopup(props) {
       onClose={props.onClose}
       isOpen={props.isOpen}
       name="change-avatar"
-      title="Обновить аватар"
-      buttonText="Сохранить"
+      title="Update avatar"
+      buttonText="Save"
     >
       <div className="popup__input-container">
         <input
@@ -27,7 +27,7 @@ function EditAvatarPopup(props) {
           type="url"
           name="avatar"
           className="popup__input popup__input_change-avatar"
-          placeholder="Ссылка на аватар"
+          placeholder="Link to avatar"
           required
           ref={avatarRef}
         />

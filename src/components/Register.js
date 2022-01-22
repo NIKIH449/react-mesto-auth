@@ -21,7 +21,7 @@ function Register(props) {
     <section className="auth">
       <form className="auth__form" onSubmit={onRegister}>
         <div className="auth__container">
-          <h2 className="auth__title">Регистрация</h2>
+          <h2 className="auth__title">Registration</h2>
           <input
             value={email}
             onChange={handleChangeEmail}
@@ -39,7 +39,7 @@ function Register(props) {
             type="password"
             name="password"
             className="auth__input"
-            placeholder="Пароль"
+            placeholder="Password"
             minLength="6"
             maxLength="40"
             required
@@ -47,12 +47,12 @@ function Register(props) {
         </div>
         <div className="auth__container">
           <button type="submit" className="auth__submit-button">
-            Зарегистрироваться
+            Register
           </button>
           <p className="auth__paragraph">
-            Уже зарегистрированы?
+            Already registered?
             <Link to="/sign-in" className="auth__link">
-              Войти
+              Login
             </Link>
           </p>
         </div>

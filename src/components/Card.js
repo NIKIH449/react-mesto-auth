@@ -30,7 +30,7 @@ function Card(props) {
         onClick={handleCardDelete}
         className={cardDeleteButtonClassName}
         type="button"
-        aria-label="удалить"
+        aria-label="Delete"
       ></button>
       <img
         onClick={handleClick}
@@ -44,7 +44,7 @@ function Card(props) {
           <button
             onClick={handleLikeClick}
             className={cardLikeButtonClassName}
-            aria-label="Лайк"
+            aria-label="Like"
             type="button"
           ></button>
           <div className="element__likes">{props.card.likes.length}</div>

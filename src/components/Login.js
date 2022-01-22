@@ -19,7 +19,7 @@ function Login(props) {
     <section className="auth">
       <form onSubmit={onLogin} className="auth__form">
         <div className="auth__container">
-          <h2 className="auth__title">Войти</h2>
+          <h2 className="auth__title">Login</h2>
           <input
             value={email}
             onChange={handleChangeEmail}
@@ -37,13 +37,13 @@ function Login(props) {
             type="password"
             name="password"
             className="auth__input"
-            placeholder="Пароль"
+            placeholder="Password"
             minLength="6"
             maxLength="40"
           />
         </div>
         <button type="sumbit" className="auth__submit-button">
-          Войти
+          Login
         </button>
       </form>
     </section>

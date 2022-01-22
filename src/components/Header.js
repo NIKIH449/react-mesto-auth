@@ -17,16 +17,16 @@ function Header(props) {
             type="submit"
             className="header__button"
           >
-            Выйти
+            Logout
           </button>
         </div>
       ) : location.pathname === '/sign-up' ? (
         <Link to="/sign-in" className="header__link">
-          Войти
+          Login
         </Link>
       ) : (
         <Link to="/sign-up" className="header__link">
-          Регистрация
+          Registration
         </Link>
       ) : ''}
     </header>

@@ -47,7 +47,10 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
+          setIsDataLoading(false);
         });
+    } else {
+      setIsDataLoading(false);
     }
   }, [navigate]);
   useEffect(() => {
@@ -61,6 +64,7 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        setIsDataLoading(false);
       });
   }, []);
 
